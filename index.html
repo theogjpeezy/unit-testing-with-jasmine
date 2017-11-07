@@ -2,11 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Garbage Test Music Player</title>
+    <script src="src/Player.js"></script>
+    <script src="src/Song.js"></script>
+    <link rel="stylesheet" href="style/main.css">
 </head>
 <body>
+<h1 class="center">Garbage Test Music Player</h1>
+<h2 class="center">Test application for design pattern and unit test practice.</h2>
+    <p>Pick a song to play:</p>
+    <form>
+        <table>
+            <tr>
+                <td><input type="radio" id="choice1" name="song" value="rockstar"/></td>
+                <td><label for="choice1">Rockstar - Post Malone</label></td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="choice2" name="song" value="bodackYellow"/></td>
+                <td><label for="choice2">Bodak Yellow (Money Moves) - Cardi B</label></td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="choice3" name="song" value="18002738255"/></td>
+                <td><label for="choice3">1-800-273-8255 - Logic</label></td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="choice4" name="song" value="feelItStill"/></td>
+                <td><label for="choice4">Feel It Still - Portugal</label></td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="choice5" name="song" value="thunder"/></td>
+                <td><label for="choice5">Thunder - Imagine Dragons</label></td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="choice6" name="song" value="sorryNotSorry"/></td>
+                <td><label for="choice6">Sorry Not Sorry - Demi Lovato</label></td>
+            </tr>
+        </table>
+        <div style="margin-top: 20px">
+            <a href="#" name="play" id="play">Play</a>
+            <a href="#" name="pause" id="pause">Pause</a>
+        </div>
+        <div id="nowPlaying" style="display:none">
+            <h3>Now Playing</h3>
+            <p><span id="nowPlayingTitleAndArtist"></span> - <a href="#" name="addFavorite" id="addFavorite">Add to favorites</a></p>
 
-    <input type="button" value="Play"/>
-    <input type="button" value="Stop"/>
+        </div>
+        <hr/>
+        <div id="favorites">
+            <h3>Favorite Songs</h3>
+            <ul id="favoriteSongs">
+
+            </ul>
+            <a href="#" id="clearFavorites">Clear Favorites</a>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        var form = document.querySelector('form');
+        var player = new Player();
+        var songs = {
+            'rockstar' : new Song('Rockstar', 'Post Malone'),
+            'bodackYellow' : new Song('Bodack Yellow (Money Moves)', 'Cardi B'),
+            '18002738255' : new Song('1-800-273-8255', 'Logic'),
+            'feelItStill' : new Song('Feel It Still', 'Portugal'),
+            'thunder' : new Song('Thunder', 'Imagine Dragons'),
+            'sorryNotSorry' : new Song('Sorry Not Sorry', 'Demi Lovato'),
+        }
+        document.getElementById('play').addEventListener('click', function( e ) {
+            let song = songs[getSelectedSongKey()];
+            player.play(song);
+            document.getElementById('nowPlaying').setAttribute('style', 'display:block');
+            document.getElementById('nowPlayingTitleAndArtist').innerHTML = song.getTitle() + ' - ' + song.getArtist();
+        });
+        document.getElementById('pause').addEventListener('click', function( e ) {
+            player.pause();
+            document.getElementById('nowPlaying').setAttribute('style', 'display:none');
+        });
+
+        document.getElementById('addFavorite').addEventListener('click', function( e ) {
+            let song = songs[getSelectedSongKey()];
+            player.makeFavorite(song);
+            redrawFavorites();
+        });
+        document.getElementById('clearFavorites').addEventListener('click', function( e ) {
+            player.clearFavorites();
+            redrawFavorites();
+        });
+
+        function getSelectedSongKey () {
+            var data = new FormData(form);
+            for (const entry of data) {
+                return entry[1];
+            }
+        };
+        function addToFavoriteList(song) {
+            var favoritesList = document.getElementById('favoriteSongs');
+            var songItem = document.createElement('li');
+            songItem.innerHTML = song.getTitle() + ' - ' + song.getArtist();
+            favoritesList.appendChild(songItem);
+        }
+        function redrawFavorites() {
+            var favoritesList = document.getElementById('favoriteSongs');
+            while(favoritesList.hasChildNodes()) {
+                favoritesList.removeChild(favoritesList.lastChild);
+            }
+            player.getFavorites().map(x => new Song(x.title, x.artist)).forEach(addToFavoriteList);
+        }
+        redrawFavorites();
+
+    </script>
 </body>
 </html>

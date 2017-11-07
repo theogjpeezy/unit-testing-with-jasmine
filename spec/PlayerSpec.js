@@ -1,6 +1,4 @@
 describe("Player", function() {
-  var Player = require('../../script/jasmine_examples/Player');
-  var Song = require('../../script/jasmine_examples/Song');
   var player;
   var song;
 

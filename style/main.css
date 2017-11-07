@@ -1,0 +1,13 @@
+.center {
+     margin: auto;
+     width: 50%;
+     text-align: center;
+ }
+
+.play {
+    background-image: url("play.jpg");
+}
+
+.pause {
+    background-image: url("pause.jpg");
+}
